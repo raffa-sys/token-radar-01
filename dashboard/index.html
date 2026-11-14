@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Token Launch Radar — pre-token protocols ranked by implied value</title>
+<link rel="stylesheet" href="app.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand"><span class="pulse" aria-hidden="true"></span>TOKEN LAUNCH RADAR</div>
+  <p class="tag">Every protocol below records no token yet. Each one is ranked by what its token
+  would be worth if the protocol's record stayed as it is — and each row carries a concrete
+  plan for farming it before a launch.</p>
+  <dl class="stats" id="stats"></dl>
+</header>
+
+<main>
+  <section class="controls" aria-label="Filters">
+    <label>Search <input id="q" type="search" placeholder="Name, slug or category…" autocomplete="off"></label>
+    <label>Category <select id="cat"><option value="">All categories</option></select></label>
+    <label>Chain <select id="chain"><option value="">All chains</option></select></label>
+    <label>Status <select id="status">
+      <option value="pre">Pre-token (ranked)</option>
+      <option value="live">Live token — not ranked</option>
+      <option value="all">Pre-token + live</option>
+    </select></label>
+    <label>Min TVL <select id="mintvl">
+      <option value="0">Any TVL</option>
+      <option value="10000000">$10M+</option>
+      <option value="50000000">$50M+ (watchlist floor)</option>
+      <option value="100000000">$100M+</option>
+      <option value="500000000">$500M+</option>
+      <option value="1000000000">$1B+</option>
+    </select></label>
+    <button id="reset" type="button">Reset</button>
+  </section>
+
+  <p class="count" id="count" aria-live="polite"></p>
+
+  <section class="tablewrap">
+    <table id="board">
+      <thead><tr>
+        <th data-sort="rank">#</th>
+        <th data-sort="name">Protocol</th>
+        <th data-sort="category">Category</th>
+        <th data-sort="chains">Chains</th>
+        <th data-sort="tvl">TVL</th>
+        <th data-sort="change">7d</th>
+        <th data-sort="age">Age</th>
+        <th data-sort="value">Implied value</th>
+      </tr></thead>
+      <tbody id="rows"></tbody>
+    </table>
+  </section>
+
+  <section class="detail" id="detail" hidden>
+    <button id="closedetail" type="button">Close detail</button>
+    <div id="detailbody"></div>
+  </section>
+
+  <section class="model" id="model">
+    <h2>How the value is built</h2>
+    <p id="modeltext"></p>
+    <ol class="formula">
+      <li><strong>Base:</strong> TVL &times; 0.40 — a new token is typically worth a fraction of the value its protocol secures.</li>
+      <li><strong>Growth:</strong> &times; (1 + 0.8 &times; 7-day TVL change), change clamped to &minus;50%…+100%. An unreported change counts as neutral. One wild week cannot dominate.</li>
+      <li><strong>Age:</strong> &times; (1 + 0.4 &times; days-with-no-token &divide; 1460). A four-year track record with no token yet earns up to +40%. No listing date counts as 180 days.</li>
+      <li><strong>Reach:</strong> &times; (1 + 0.02 per extra chain, capped at 15). Wider deployment earns a modest premium.</li>
+      <li><strong>Category prior:</strong> &times; 0.97–1.10, a small documented tilt (Risk Curators 1.10, RWA 1.08, Dexs / Lending 1.05, the rest 1.00, uncategorised 0.97).</li>
+    </ol>
+    <p class="note">Every input comes from the snapshot row itself. No name or slug is ever hardcoded,
+    and the board never predicts whether or when a token is issued — it prices what one would be
+    worth if the record stayed as it is. “Records no token” means DefiLlama carries no token for
+    the protocol, not that it has none.</p>
+    <h3>What is left out, and why</h3>
+    <p class="note">Protocols whose token already trades are listed under “Live token” and are never
+    ranked as launch candidates. A further set of rows that record no token is also left off the
+    ranked board: centralised exchanges, bridges, liquid-staking and restaking products, wrapped
+    or staked products of a token that already trades, and versioned copies. They are not launches
+    waiting to happen, and the count of each group is shown in the header above.</p>
+  </section>
+</main>
+
+<footer><p>Token Launch Radar — built from a frozen DefiLlama snapshot. Implied values are this
+radar's own claim, never a market price. Farm at your own risk; never pay anyone who messages
+you first about an airdrop.</p></footer>
+
+<script src="../data.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
